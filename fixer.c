@@ -4,7 +4,8 @@ static t_class *fixer_class;
  
 typedef struct _fixer {  
     t_object  x_obj; 
-    t_int last; // previous tick
+    t_int last;         // previous tick
+    t_int first_input;  // for the very frist input
 } t_fixer;  
 
 void fixer_float(t_fixer *x, t_floatarg input_phase) {   
@@ -17,6 +18,12 @@ void fixer_float(t_fixer *x, t_floatarg input_phase) {
     // only do anything for positive numbers
     if (in < 0) return;
 
+    if (x->first_input){
+        x->first_input = 0;
+        // if first input a 0, let it through 
+        if (in == 0) outlet_float(x->x_obj.ob_outlet, in);
+    }
+
     if (in != x->last) {
         diff = in - x->last;
         // if a number was skipped, fill in missing
@@ -28,7 +35,7 @@ void fixer_float(t_fixer *x, t_floatarg input_phase) {
             }
         }
         // rolled over, fill in missing before and after 359
-        else if (diff < 0){ 
+        else if (diff < 0 && diff != -359){ 
             diff2 = (360 - x->last) + in;
             // don't send out more than 20 ticks at once
             if (diff2 > 20) diff2 = 20;
@@ -49,6 +56,7 @@ void *fixer_new(void) {
     t_fixer *x = (t_fixer *)pd_new(fixer_class);  
     
     x->last = 0;
+    x->first_input = 1;
     outlet_new(&x->x_obj, &s_float);
     
     return (void *)x;  

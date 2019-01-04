@@ -25,6 +25,7 @@ void clocker_start(t_clocker *x) {
 void clocker_float(t_clocker *x, t_floatarg input_phase) {  
     
     t_int i_input_phase = input_phase;
+    
     // start now flag 
     if (x->start_flag) {
         x->start_flag = 0;
@@ -35,15 +36,13 @@ void clocker_float(t_clocker *x, t_floatarg input_phase) {
         if (i_input_phase == 0) {
             x->start_sync_flag = 0;
             x->tick_count = 0;
-            outlet_float(x->x_obj.ob_outlet, x->tick_count);
         }
     }
-    else {
-        x->tick_count++;
-        if (x->tick_count >= x->length) {
-            x->tick_count = 0;
-        }
-        outlet_float(x->x_obj.ob_outlet, x->tick_count);
+    // loop it
+    outlet_float(x->x_obj.ob_outlet, x->tick_count);
+    x->tick_count++;
+    if (x->tick_count >= x->length) {
+        x->tick_count = 0;
     }
 }
 
