@@ -1,14 +1,14 @@
 #include "m_pd.h"  
 
-static t_class *clockint_class;  
+static t_class *clockfix_class;  
  
-typedef struct _clockint {  
+typedef struct _clockfix {  
     t_object  x_obj; 
     t_int last;         // previous tick
     t_int first_input;  // for the very frist input
-} t_clockint;  
+} t_clockfix;  
 
-void clockint_float(t_clockint *x, t_floatarg input_phase) {   
+void clockfix_float(t_clockfix *x, t_floatarg input_phase) {   
     
     t_int in = input_phase;
     t_int diff = 0;
@@ -52,8 +52,8 @@ void clockint_float(t_clockint *x, t_floatarg input_phase) {
     }
 }
 
-void *clockint_new(void) {  
-    t_clockint *x = (t_clockint *)pd_new(clockint_class);  
+void *clockfix_new(void) {  
+    t_clockfix *x = (t_clockfix *)pd_new(clockfix_class);  
     
     x->last = 0;
     x->first_input = 1;
@@ -62,7 +62,7 @@ void *clockint_new(void) {
     return (void *)x;  
 }  
 
-void clockint_setup(void) {  
-    clockint_class = class_new(gensym("clockint"), (t_newmethod)clockint_new, 0, sizeof(t_clockint), CLASS_DEFAULT, 0);  
-	class_addfloat(clockint_class, clockint_float);  
+void clockfix_setup(void) {  
+    clockfix_class = class_new(gensym("clockfix"), (t_newmethod)clockfix_new, 0, sizeof(t_clockfix), CLASS_DEFAULT, 0);  
+	class_addfloat(clockfix_class, clockfix_float);  
 }
