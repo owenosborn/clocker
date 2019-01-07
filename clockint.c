@@ -1,14 +1,14 @@
 #include "m_pd.h"  
 
-static t_class *fixer_class;  
+static t_class *clockint_class;  
  
-typedef struct _fixer {  
+typedef struct _clockint {  
     t_object  x_obj; 
     t_int last;         // previous tick
     t_int first_input;  // for the very frist input
-} t_fixer;  
+} t_clockint;  
 
-void fixer_float(t_fixer *x, t_floatarg input_phase) {   
+void clockint_float(t_clockint *x, t_floatarg input_phase) {   
     
     t_int in = input_phase;
     t_int diff = 0;
@@ -52,8 +52,8 @@ void fixer_float(t_fixer *x, t_floatarg input_phase) {
     }
 }
 
-void *fixer_new(void) {  
-    t_fixer *x = (t_fixer *)pd_new(fixer_class);  
+void *clockint_new(void) {  
+    t_clockint *x = (t_clockint *)pd_new(clockint_class);  
     
     x->last = 0;
     x->first_input = 1;
@@ -62,7 +62,7 @@ void *fixer_new(void) {
     return (void *)x;  
 }  
 
-void fixer_setup(void) {  
-    fixer_class = class_new(gensym("fixer"), (t_newmethod)fixer_new, 0, sizeof(t_fixer), CLASS_DEFAULT, 0);  
-	class_addfloat(fixer_class, fixer_float);  
+void clockint_setup(void) {  
+    clockint_class = class_new(gensym("clockint"), (t_newmethod)clockint_new, 0, sizeof(t_clockint), CLASS_DEFAULT, 0);  
+	class_addfloat(clockint_class, clockint_float);  
 }
