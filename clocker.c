@@ -14,6 +14,8 @@ typedef struct _clocker {
 
 void clocker_stop(t_clocker *x) {  
     x->output_enable = 0;	
+    x->start_sync_flag = 0;
+    x->start_flag = 0;
 }
 
 void clocker_start_sync(t_clocker *x) {  
