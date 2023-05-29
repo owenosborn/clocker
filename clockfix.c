@@ -28,19 +28,25 @@ void clockfix_float(t_clockfix *x, t_floatarg input_phase) {
         diff = in - x->last;
         // if a number was skipped, fill in missing
         if (diff > 1) {
-            // don't send out more than 20 ticks at once
-            if (diff > 20) diff = 20;  
-            for (i = 1; i < (diff + 1); i++) {
-                outlet_float(x->x_obj.ob_outlet, x->last + i);
+            // don't send out more than 8 ticks at once (this would be faster than like 500 bpm),
+            if (diff < 8) {
+                for (i = 1; i < (diff + 1); i++) {
+                    outlet_float(x->x_obj.ob_outlet, x->last + i);
+                }
             }
         }
         // rolled over, fill in missing before and after 359
         else if (diff < 0 && diff != -359){ 
             diff2 = (360 - x->last) + in;
-            // don't send out more than 20 ticks at once
-            if (diff2 > 20) diff2 = 20;
-            for (i = 1; i < (diff2 + 1); i++) {
-                outlet_float(x->x_obj.ob_outlet, (x->last + i) % 360);
+            // don't send out more than 8 ticks at once (this would be faster than 500 bpm)
+            if (diff2 < 8) {
+                for (i = 1; i < (diff2 + 1); i++) {
+                    outlet_float(x->x_obj.ob_outlet, (x->last + i) % 360);
+                }
+            }
+            // if it is 0, and more than 8 away from last, we assume phase was reset, so  output 0
+            else if (in == 0){
+                outlet_float(x->x_obj.ob_outlet, 0);
             }
         }
         // otherwise it was consecutive

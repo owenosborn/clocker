@@ -6,7 +6,7 @@ LIBRARY_NAME = clocker
 # add your .c source files, one object per file, to the SOURCES
 # variable, help files will be included automatically, and for GUI
 # objects, the matching .tcl file too
-SOURCES = clocker.c clockfix.c midiclocker.c
+SOURCES = clocker.c clockfill.c midiclocker.c
 
 # list all pd objects (i.e. myobject.pd) files here, and their helpfiles will
 # be included automatically
@@ -113,7 +113,7 @@ ifeq ($(UNAME),Darwin)
       SOURCES += $(SOURCES_iphoneos)
 # Starting with Xcode 4.0, the PowerPC compiler is not installed by default
       ifeq ($(wildcard /usr/llvm-gcc-4.2/libexec/gcc/powerpc*), )
-        FAT_FLAGS = -arch i386 -arch x86_64 -mmacosx-version-min=10.5
+        FAT_FLAGS = -arch x86_64 -mmacosx-version-min=10.5
       else
         FAT_FLAGS = -arch ppc -arch i386 -arch x86_64 -mmacosx-version-min=10.4
       endif
